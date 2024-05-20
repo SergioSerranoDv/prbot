@@ -1,11 +1,20 @@
 import { Request, Response, Router } from "express"
 import { Discord } from "../clients/Discord" // Adjust the path as necessary
 
+interface ErrorResponse {
+  status: string
+  code: number
+  message: string
+}
 export class RootRouter {
   private static instance: RootRouter
   private router: Router
   private discord: Discord
 
+  private readonly GITHUB_EVENTS = {
+    PING: "ping",
+    PUSH: "push",
+  }
   private constructor() {
     this.discord = Discord.getInstance()
     // Ensure the Discord bot is started
@@ -26,22 +35,39 @@ export class RootRouter {
     }
     return RootRouter.instance.router
   }
+
   private async handleGithubWebhook(req: Request, res: Response) {
     try {
-      const githubEvent = req.headers["x-github-event"]
+      let response: ErrorResponse = {
+        status: "error",
+        code: 500,
+        message: "Internal server error",
+      }
+      const githubEvent = req.headers["x-github-event"] as string
       const payload = req.body
-      let response
-      if (githubEvent === "ping") {
-        return res.status(201).send({
-          status: "ok",
+
+      if (githubEvent === this.GITHUB_EVENTS.PING) {
+        response = {
+          status: "Success",
           code: 201,
           message: "pong",
-        })
-      } else if (githubEvent === "push") {
+        }
+      } else if (githubEvent === this.GITHUB_EVENTS.PUSH) {
         response = await this.senMessageToChannel(payload)
       }
-      return response
-    } catch (error) {
+      if (response.status === "error") {
+        return res.status(response.code).send({
+          status: "error",
+          code: response.code,
+          message: response.message,
+        })
+      }
+      return res.status(response.code).send({
+        status: "success",
+        code: response.code,
+        message: response.message,
+      })
+    } catch (error: any) {
       return res.status(500).send({
         status: "error",
         code: 500,
