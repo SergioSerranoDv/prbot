@@ -45,8 +45,7 @@ export class RootRouter {
         message: "Internal server error",
       }
       const githubEvent = req.headers["x-github-event"] as string
-      const payload = req.body
-      console.log(payload)
+      const payload = JSON.parse(req.body.payload)
 
       if (githubEvent === this.GITHUB_EVENTS.PING) {
         response = {
@@ -55,8 +54,6 @@ export class RootRouter {
           message: "pong",
         }
       } else if (githubEvent === this.GITHUB_EVENTS.PUSH) {
-        console.log("Received push event")
-        console.log(payload.ref)
         response = await this.sendMessageToChannel(payload)
       }
       if (response.status === "error") {
@@ -83,9 +80,6 @@ export class RootRouter {
     try {
       console.log("Sending message to Discord channel")
       const channelId = "1171241162804318310"
-      console.log(payload)
-      const repository = payload.ref
-      console.log(repository)
       const message = `New push event received on GitHub, repository: ${payload.repository.full_name}`
       console.log(message)
       const channel = await this.discord.getClient().channels.fetch(channelId)
