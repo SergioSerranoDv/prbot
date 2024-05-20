@@ -45,7 +45,7 @@ export class RootRouter {
         message: "Internal server error",
       }
       const githubEvent = req.headers["x-github-event"] as string
-      const payload = req.body
+      const payload = req.body.payload
 
       if (githubEvent === this.GITHUB_EVENTS.PING) {
         response = {
