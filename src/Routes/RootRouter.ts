@@ -28,15 +28,16 @@ export class RootRouter {
   }
   private async handleGithubWebhook(req: Request, res: Response) {
     try {
-      const githubEvent = req.headers["X-GitHub-Event"]
+      const githubEvent = req.headers
       console.log(githubEvent)
-      if (githubEvent === "ping") {
-        return res.status(200).send({
-          status: "ok",
-          code: 201,
-          message: "pong",
-        })
-      }
+      // if (githubEvent === "ping") {
+      //   console.log("Received ping event")
+      //   return res.status(200).send({
+      //     status: "ok",
+      //     code: 201,
+      //     message: "pong",
+      //   })
+      // }
       const payload = req.body
       console.log(payload)
       return res.status(201).send({
