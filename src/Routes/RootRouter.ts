@@ -54,6 +54,7 @@ export class RootRouter {
           message: "pong",
         }
       } else if (githubEvent === this.GITHUB_EVENTS.PUSH) {
+        console.log("Received push event")
         response = await this.senMessageToChannel(payload)
       }
       if (response.status === "error") {
