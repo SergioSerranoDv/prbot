@@ -30,11 +30,9 @@ export class RootRouter {
     try {
       const payload = req.body
       console.log(payload)
-      return res.status(200).send({
-        status: "success",
-        code: 200,
-        message: "Webhook received",
-      })
+      res.setHeader("X-Content-Type-Options", "nosniff")
+      res.setHeader("Date", new Date().toUTCString())
+      res.setHeader("Server", "Jetty(10.0.20)")
     } catch (error) {
       console.error(error)
       return res.status(500).send({
