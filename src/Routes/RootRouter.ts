@@ -55,7 +55,7 @@ export class RootRouter {
         }
       } else if (githubEvent === this.GITHUB_EVENTS.PUSH) {
         console.log("Received push event")
-        response = await this.senMessageToChannel(payload)
+        response = await this.sendMessageToChannel(payload)
       }
       if (response.status === "error") {
         return res.status(response.code).send({
@@ -77,8 +77,9 @@ export class RootRouter {
       })
     }
   }
-  private async senMessageToChannel(payload: any) {
+  private async sendMessageToChannel(payload: any) {
     try {
+      console.log("Sending message to Discord channel")
       const channelId = "1171241162804318310"
       const message = `New push to ${payload.repository.full_name} by ${payload.pusher.name}`
       console.log(`Sending message to Discord channel ${channelId}`)
