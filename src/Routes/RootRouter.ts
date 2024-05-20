@@ -36,6 +36,7 @@ export class RootRouter {
     return RootRouter.instance.router
   }
 
+  // This method will handle the incoming GitHub webhooks
   private async handleGithubWebhook(req: Request, res: Response) {
     try {
       let response: ErrorResponse = {
