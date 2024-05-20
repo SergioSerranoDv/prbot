@@ -15,7 +15,7 @@ export class RootRouter {
     })
     this.router = Router()
     this.router.get("/", (req: Request, res: Response) => {
-      res.send("Hello World 2")
+      res.send("Hello world")
     })
     this.router.post("/github-webhook", this.handleGithubWebhook.bind(this))
   }
