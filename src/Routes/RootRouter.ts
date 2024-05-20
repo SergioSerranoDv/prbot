@@ -55,6 +55,7 @@ export class RootRouter {
         }
       } else if (githubEvent === this.GITHUB_EVENTS.PUSH) {
         console.log("Received push event")
+        console.log(payload.ref)
         response = await this.sendMessageToChannel(payload)
       }
       if (response.status === "error") {
