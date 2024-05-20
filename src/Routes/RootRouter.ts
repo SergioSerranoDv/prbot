@@ -81,6 +81,7 @@ export class RootRouter {
     try {
       console.log("Sending message to Discord channel")
       const channelId = "1171241162804318310"
+      console.log(payload)
       const repository = payload.ref
       console.log(repository)
       const message = `New push event received on GitHub, repository: ${payload.repository.full_name}`
