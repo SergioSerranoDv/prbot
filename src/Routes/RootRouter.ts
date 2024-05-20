@@ -81,9 +81,10 @@ export class RootRouter {
     try {
       console.log("Sending message to Discord channel")
       const channelId = "1171241162804318310"
+      const message = `New push event received on GitHub, repository: ${payload.repository.full_name}`
       const channel = await this.discord.getClient().channels.fetch(channelId)
       if (channel && channel.isTextBased()) {
-        await channel.send("New push event received on GitHub")
+        await channel.send(message)
       }
       return {
         status: "successs",
