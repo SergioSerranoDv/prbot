@@ -29,27 +29,19 @@ export class RootRouter {
   private async handleGithubWebhook(req: Request, res: Response) {
     try {
       const githubEvent = req.headers["x-github-event"]
-      console.log(githubEvent)
       const payload = req.body
-      console.log(payload)
+      let response
       if (githubEvent === "ping") {
-        console.log("Received ping event")
         return res.status(201).send({
           status: "ok",
           code: 201,
           message: "pong",
         })
       } else if (githubEvent === "push") {
-        console.log("Received push event")
-        await this.senMessageToChannel()
+        response = await this.senMessageToChannel(payload)
       }
-      return res.status(201).send({
-        status: "ok",
-        code: 201,
-        message: "Webhook received",
-      })
+      return response
     } catch (error) {
-      console.error(error)
       return res.status(500).send({
         status: "error",
         code: 500,
@@ -57,15 +49,25 @@ export class RootRouter {
       })
     }
   }
-  private async senMessageToChannel() {
+  private async senMessageToChannel(payload: any) {
     try {
       const channelId = "1171241162804318310"
+      const message = `New push to ${payload.repository.full_name} by ${payload.pusher.name}`
       const channel = await this.discord.getClient().channels.fetch(channelId)
       if (channel && channel.isTextBased()) {
-        await channel.send("Hello from the prbot!")
+        await channel.send(message)
+      }
+      return {
+        status: "successs",
+        code: 201,
+        message: `Message sent to Discord channel, ${channel}`,
       }
     } catch (error) {
-      console.error(error)
+      return {
+        status: "error",
+        code: 500,
+        message: "Internal server error",
+      }
     }
   }
 }
