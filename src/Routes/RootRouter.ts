@@ -30,16 +30,19 @@ export class RootRouter {
     try {
       const githubEvent = req.headers["x-github-event"]
       console.log(githubEvent)
-      // if (githubEvent === "ping") {
-      //   console.log("Received ping event")
-      //   return res.status(200).send({
-      //     status: "ok",
-      //     code: 201,
-      //     message: "pong",
-      //   })
-      // }
       const payload = req.body
       console.log(payload)
+      if (githubEvent === "ping") {
+        console.log("Received ping event")
+        return res.status(201).send({
+          status: "ok",
+          code: 201,
+          message: "pong",
+        })
+      } else if (githubEvent === "push") {
+        console.log("Received push event")
+        await this.senMessageToChannel()
+      }
       return res.status(201).send({
         status: "ok",
         code: 201,
