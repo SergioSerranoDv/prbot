@@ -30,8 +30,18 @@ export class RootRouter {
     try {
       const payload = req.body
       console.log(payload)
+      return res.status(200).send({
+        status: "success",
+        code: 200,
+        message: "Webhook received",
+      })
     } catch (error) {
       console.error(error)
+      return res.status(500).send({
+        status: "error",
+        code: 500,
+        message: "Internal server error",
+      })
     }
   }
   private async senMessageToChannel() {
